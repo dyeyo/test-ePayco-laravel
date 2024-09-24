@@ -20,3 +20,4 @@ Route::post('register-person', [PersonController::class, 'store']);
 Route::post('recharge-wallet', [WalletController::class, 'rechargeWallet']);
 Route::post('generate-token', [WalletController::class, 'generatePaymentToken']);
 Route::post('confirm-payment', [WalletController::class, 'confirmPayment']);
+Route::post('wallet/check-balance', [WalletController::class, 'checkBalance']);

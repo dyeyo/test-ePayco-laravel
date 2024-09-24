@@ -1,13 +1,11 @@
-<!-- resources/views/emails/payment_confirmation.blade.php -->
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Payment Confirmation</title>
+    <title>Confirmación de token</title>
 </head>
 <body>
-    <h1>Payment Confirmation Token</h1>
-    <p>Your token is: {{ $token }}</p>
-    <p>Please use this token to confirm your payment.</p>
+    <h1> Confirmación de token para el pago</h1>
+    <p>El token es: {{ $token }}</p>
+    <p>Por favor confirme su token en el sistema.</p>
 </body>
 </html>

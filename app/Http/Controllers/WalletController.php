@@ -14,7 +14,6 @@ class WalletController extends Controller
 {
     public function rechargeWallet(Request $request)
     {
-        // Validar los datos de entrada
         $validator = Validator::make($request->all(), [
             'document' => 'required|exists:persons,document',
             'cellphone' => 'required|exists:persons,cellphone',
@@ -29,7 +28,6 @@ class WalletController extends Controller
             ], 400);
         }
 
-        // Buscar la persona por documento y número de celular
         $person = Person::where('document', $request->document)
                         ->where('cellphone', $request->cellphone)
                         ->first();
@@ -42,7 +40,6 @@ class WalletController extends Controller
             ], 404);
         }
 
-        // Buscar o crear la billetera asociada a la persona
         $wallet = $person->wallet()->firstOrCreate([
             'person_id' => $person->id
         ]);
@@ -104,10 +101,8 @@ class WalletController extends Controller
         $wallet->session_id = $sessionId;
         $wallet->save();
 
-        // Enviar el token al correo del usuario
         Mail::to($person->email)->send(new PaymentConfirmationMail($token));
 
-        // Respuesta con éxito
         return response()->xml([
             'status'  => 'success',
             'code'    => '200',
@@ -132,7 +127,6 @@ class WalletController extends Controller
             ], 400);
         }
 
-        // Buscar la billetera con el session_id y token correctos
         $wallet = Wallet::where('session_id', $request->session_id)
                         ->where('token', $request->token)
                         ->first();
@@ -163,6 +157,44 @@ class WalletController extends Controller
             'code'    => '200',
             'message' => 'Payment confirmed successfully',
             'new_balance' => $wallet->balance
+        ], 200);
+    }
+
+    public function checkBalance(Request $request)
+    {
+        // dd($request);
+        $request->validate([
+            'document' => 'required|string',
+            'cellphone'    => 'required|string',
+        ]);
+
+        $person = Person::where('document', $request->document)
+                        ->where('cellphone', $request->cellphone)
+                        ->first();
+
+        if (!$person) {
+            return response()->json([
+                'status'  => 'fail',
+                'code'    => 404,
+                'message' => 'Person not found or credentials do not match',
+            ], 404);
+        }
+
+        $wallet = Wallet::where('person_id', $person->id)->first();
+
+        if (!$wallet) {
+            return response()->xml([
+                'status'  => 'failure',
+                'code'    => '400',
+                'message' => 'Wallet not found'
+            ], 400);
+        }
+
+        return response()->xml([
+            'status'  => 'success',
+            'code'    => '200',
+            'message' => 'Balance retrieved successfully',
+            'balance' => $wallet->balance,
         ], 200);
     }
 }
