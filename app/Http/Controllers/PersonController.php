@@ -19,17 +19,17 @@ class PersonController extends Controller
 
         if ($validator->fails()) {
             return response()->xml([
-                'status'  => 'failure',
-                'code'    => '400',
-                'message' => $validator->errors()->first()
+                'success'  => false,
+                'cod_error' => 400,
+                'message_error' => $validator->errors()->first()
             ], 400);
         }
 
         $person = Person::create($request->all());
 
         return response()->xml([
-            'status'  => 'success',
-            'code'    => '200',
+            'success'  => true,
+            'code'    => 200,
             'message' => 'Person registered successfully'
         ], 200);
     }

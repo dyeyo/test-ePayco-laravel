@@ -22,9 +22,9 @@ class WalletController extends Controller
 
         if ($validator->fails()) {
             return response()->xml([
-                'status'  => 'failure',
-                'code'    => '400',
-                'message' => $validator->errors()->first()
+                'success' => false,
+                'cod_error'    =>  400,
+                'message_error' => $validator->errors()->first()
             ], 400);
         }
 
@@ -34,9 +34,9 @@ class WalletController extends Controller
 
         if (!$person) {
             return response()->xml([
-                'status'  => 'failure',
-                'code'    => '404',
-                'message' => 'Person not found'
+                'success' => false,
+                'cod_error'    => 404,
+                'message_error' => 'Person not found'
             ], 404);
         }
 
@@ -48,8 +48,8 @@ class WalletController extends Controller
         $wallet->save();
 
         return response()->xml([
-            'status'  => 'success',
-            'code'    => '200',
+            'success'  => true,
+            'code'    => 200,
             'message' => 'Wallet recharged successfully',
             'new_balance' => $wallet->balance
         ], 200);
@@ -65,9 +65,9 @@ class WalletController extends Controller
 
         if ($validator->fails()) {
             return response()->xml([
-                'status'  => 'failure',
-                'code'    => '400',
-                'message' => $validator->errors()->first()
+                'success'  => false,
+                'cod_error'    =>  400,
+                'message_error' => $validator->errors()->first()
             ], 400);
         }
 
@@ -77,18 +77,18 @@ class WalletController extends Controller
 
         if (!$person) {
             return response()->xml([
-                'status'  => 'failure',
-                'code'    => '404',
-                'message' => 'Person not found'
+                'success'  => false,
+                'cod_error'    => 404,
+                'message_error' => 'Person not found'
             ], 404);
         }
 
         $wallet = $person->wallet;
         if ($wallet->balance < $request->amount) {
             return response()->xml([
-                'status'  => 'failure',
-                'code'    => '400',
-                'message' => 'Insufficient balance'
+                'success'  => false,
+                'cod_error'    =>  400,
+                'message_error' => 'Insufficient balance'
             ], 400);
         }
 
@@ -104,8 +104,8 @@ class WalletController extends Controller
         Mail::to($person->email)->send(new PaymentConfirmationMail($token));
 
         return response()->xml([
-            'status'  => 'success',
-            'code'    => '200',
+            'success'  => true,
+            'code'    => 200,
             'message' => 'Token generated and sent to email',
             'session_id' => $sessionId
         ], 200);
@@ -121,9 +121,9 @@ class WalletController extends Controller
 
         if ($validator->fails()) {
             return response()->xml([
-                'status'  => 'failure',
-                'code'    => '400',
-                'message' => $validator->errors()->first()
+                'success'  => false,
+                'cod_error'    =>  400,
+                'message_error' => $validator->errors()->first()
             ], 400);
         }
 
@@ -133,17 +133,17 @@ class WalletController extends Controller
 
         if (!$wallet) {
             return response()->xml([
-                'status'  => 'failure',
-                'code'    => '404',
-                'message' => 'Invalid session or token'
+                'success'  => false,
+                'cod_error'    => 404,
+                'message_error' => 'Invalid session or token'
             ], 404);
         }
 
         if ($wallet->balance < $request->amount) {
             return response()->xml([
-                'status'  => 'failure',
-                'code'    => '400',
-                'message' => 'Insufficient balance'
+                'success'  => false,
+                'cod_error' =>  400,
+                'message_error' => 'Insufficient balance'
             ], 400);
         }
 
@@ -153,8 +153,8 @@ class WalletController extends Controller
         $wallet->save();
 
         return response()->xml([
-            'status'  => 'success',
-            'code'    => '200',
+            'success'  => true,
+            'code'    => 200,
             'message' => 'Payment confirmed successfully',
             'new_balance' => $wallet->balance
         ], 200);
@@ -174,9 +174,9 @@ class WalletController extends Controller
 
         if (!$person) {
             return response()->json([
-                'status'  => 'fail',
-                'code'    => 404,
-                'message' => 'Person not found or credentials do not match',
+                'success'  => false,
+                'cod_error' => 404,
+                'message_error' => 'Person not found or credentials do not match',
             ], 404);
         }
 
@@ -184,15 +184,15 @@ class WalletController extends Controller
 
         if (!$wallet) {
             return response()->xml([
-                'status'  => 'failure',
-                'code'    => '400',
-                'message' => 'Wallet not found'
+                'success'  => false,
+                'cod_error' => 400,
+                'message_error' => 'Wallet not found'
             ], 400);
         }
 
         return response()->xml([
             'status'  => 'success',
-            'code'    => '200',
+            'code'    => 200,
             'message' => 'Balance retrieved successfully',
             'balance' => $wallet->balance,
         ], 200);
