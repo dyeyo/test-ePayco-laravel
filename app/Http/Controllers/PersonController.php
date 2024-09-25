@@ -16,7 +16,6 @@ class PersonController extends Controller
             'email'    => 'required|email|unique:persons',
             'cellphone' => 'required',
         ]);
-
         if ($validator->fails()) {
             return response()->xml([
                 'success'  => false,

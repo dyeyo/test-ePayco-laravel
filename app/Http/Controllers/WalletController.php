@@ -184,10 +184,11 @@ class WalletController extends Controller
 
         if (!$wallet) {
             return response()->xml([
-                'success'  => false,
-                'cod_error' => 400,
-                'message_error' => 'Wallet not found'
-            ], 400);
+            'status'  => 'success',
+            'code'    => 200,
+            'message' => 'Balance retrieved successfully',
+            'balance' => 0,
+            ], 200);
         }
 
         return response()->xml([
